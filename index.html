@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>Testing .naturalWidth / .naturalHeight behaviour</title>
+
+		<style>
+			body {
+				font-family: sans-serif;
+			}
+			img {
+				max-width: 100%;
+				height: auto;
+			}
+		</style>
+	</head>
+	<body>
+		<figure>
+			<img
+				width="4165"
+				height="2343"
+				src="./image.jpg">
+			<figcaption>
+				This image has no <code>srcset.</code><br>
+				<code>img.naturalWidth</code>: <span class="width"></span>.<br>
+				<code>img.naturalHeight</code>: <span class="height"></span>.
+			</figcaption>
+		</figure>
+		<figure>
+			<img
+				width="4165"
+				height="2343"
+				src="./image.jpg"
+				srcset="./image.jpg 1024w, ./image.jpg 300w, ./image.jpg 1440w, ./image.jpg 1488w"
+				sizes="(max-width: 4165px) 100vw, 4165px">
+			<figcaption>
+				This image has a <code>srcset.</code><br>
+				<code>img.naturalWidth</code>: <span class="width"></span>.<br>
+				<code>img.naturalHeight</code>: <span class="height"></span>.
+			</figcaption>
+		</figure>
+
+		<p>
+			Original image size: 4165 x 2343.
+		</p>
+		<p>
+			Image credit: NASA/JPL-Caltech/2MASS. <a href="https://images.nasa.gov/details/PIA20357">See here</a>.
+		</p>
+
+		<script>
+			(function() {
+				function recalculate() {
+					document.querySelectorAll('figure').forEach((testcase) => {
+						const img = testcase.querySelector('img');
+						img.decode().then(() => {
+							testcase.querySelector('.width').textContent = img.naturalWidth;
+							testcase.querySelector('.height').textContent = img.naturalHeight;
+						});
+					});
+				}
+
+				recalculate();
+				window.addEventListener('resize', recalculate);
+			})();
+		</script>
+	</body>
+</html>
